@@ -390,24 +390,37 @@ a { color: inherit; }
 
 #contact p { margin: 0 0 16px; max-width: 38em; }
 
-.contact-links {
+ .contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 34px;
+  padding-top: 4px;
+}
+
+.clink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-family: var(--mono);
   font-size: 12.5px;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 140ms ease, border-bottom-color 140ms ease;
 }
 
-.contact-links a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--rule);
-  transition: color 140ms ease, text-decoration-color 140ms ease;
+.clink svg { opacity: 0.68; }
+
+.clink:hover,
+.clink:focus-visible {
+  color: var(--accent);
+  border-bottom-color: var(--rule);
 }
 
-.contact-links a:hover { color: var(--accent); text-decoration-color: var(--accent); }
-
-.at, .dc { color: var(--faint); margin: 0 1px; }
+body.over-moon { cursor: pointer; }
 
 /* ---------- footer ---------- */
 
@@ -420,7 +433,7 @@ footer {
 .footer-in {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 18px;
   padding-top: 18px;
   border-top: 1px solid var(--rule);
@@ -447,30 +460,6 @@ footer {
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-.controls { display: flex; align-items: center; gap: 8px; }
-
-.ctrl {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 27px;
-  height: 27px;
-  padding: 0;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--faint);
-  cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease, transform 200ms ease;
-}
-
-.ctrl:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
-.ctrl:active { transform: translateY(0) scale(0.96); }
-
-.ctrl .i-stop { display: none; }
-.ctrl.playing { color: var(--accent); border-color: var(--accent); }
-.ctrl.playing .i-play { display: none; }
-.ctrl.playing .i-stop { display: block; }
 
 /* ---------- motion ---------- */
 
