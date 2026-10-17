@@ -682,22 +682,40 @@ h1 .zh {
   align-items: center;
   justify-content: center;
   background: var(--bg);
-  animation: intro-out 650ms ease 1900ms forwards;
+  animation: intro-out 700ms ease 2400ms forwards;
+}
+
+.intro-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.22em;
+}
+
+.intro-word,
+.intro-zh {
+  font-family: var(--serif);
+  line-height: 1;
+  color: var(--fg);
+  opacity: 0;
+  filter: blur(9px);
+  transform: translateY(12px);
+  animation: intro-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 
 .intro-word {
-  font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", "Brush Script MT", cursive;
-  font-size: clamp(92px, 18vw, 224px);
-  line-height: 1;
-  letter-spacing: 0.01em;
-  color: var(--fg);
-  clip-path: inset(0 100% 0 0);
-  animation: intro-write 1600ms cubic-bezier(0.42, 0.02, 0.3, 1) 100ms forwards;
+  font-size: clamp(58px, 10vw, 120px);
+  font-style: italic;
+  animation-delay: 150ms;
 }
 
-@keyframes intro-write {
-  from { clip-path: inset(0 100% 0 0); }
-  to { clip-path: inset(0 0 0 0); }
+.intro-zh {
+  font-size: clamp(44px, 7.6vw, 92px);
+  color: var(--muted);
+  animation-delay: 620ms;
+}
+
+@keyframes intro-in {
+  to { opacity: 1; filter: blur(0); transform: none; }
 }
 
 @keyframes intro-out {
@@ -707,7 +725,7 @@ h1 .zh {
 .intro.skip { animation: intro-out 260ms ease forwards; }
 
 .page {
-  animation: page-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 2100ms;
+  animation: page-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 2600ms;
 }
 
 /* transform only: if this never runs, the page is still fully visible */
