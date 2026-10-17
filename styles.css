@@ -782,50 +782,149 @@ h1 .zh {
   stroke-linecap: round;
 }
 
-.hp { stroke-width: 0.9; opacity: 0.17; }
-.hp2 { stroke-width: 0.7; opacity: 0.16; }
-.hb {
-  stroke-width: 1.05;
-  opacity: 0.62;
-  fill: var(--bg);
+/* Line work. By day the skyline is a plain pen drawing; with the dark theme
+   the city switches on — windows, neon bands, the Bank of China frame and
+   the aviation beacons on the masts. */
+.harbour-svg [class*="hk-"] {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
-.hv { stroke-width: 0.55; opacity: 0.26; }
-.hw { stroke-width: 0.8; opacity: 0.24; }
-.hb0 { stroke-width: 1; opacity: 0.42; }
+.harbour-svg .hk-b,
+.harbour-svg .hk-s  { fill: var(--bg); stroke-width: 1.1; stroke-opacity: 0.74; }
+.harbour-svg .hk-bb { fill: var(--bg); stroke-width: 0.8; stroke-opacity: 0.3; }
+.harbour-svg .hk-bf { fill: var(--bg); stroke-width: 0.9; stroke-opacity: 0.48; }
+.harbour-svg .hk-d,
+.harbour-svg .hk-g,
+.harbour-svg .hk-frame { stroke-width: 0.6; stroke-opacity: 0.36; }
+.harbour-svg .hk-w  { stroke-width: 0.5; stroke-opacity: 0.4; }
+.harbour-svg .hk-m  { stroke-width: 1; stroke-opacity: 0.26; }
 
-html[data-theme="dark"] .hp { opacity: 0.22; }
-html[data-theme="dark"] .hb { opacity: 0.55; fill: var(--bg); }
-html[data-theme="dark"] .hv {
-  opacity: 0.4;
-  stroke: #e7c78f;
+/* night-only elements are drawn but invisible by day */
+.harbour-svg .hk-l,
+.harbour-svg .hk-av {
+  opacity: 0;
+  transition: opacity 1.4s ease;
 }
-html[data-theme="dark"] .hl-facets {
-  filter: drop-shadow(0 0 2px rgba(231, 199, 143, 0.28));
+.harbour-svg .hk-l { stroke: #f4c974; stroke-width: 1.15; stroke-linecap: butt; }
+.harbour-svg .hk-av { fill: #ff5a4a; stroke: none; }
+.harbour-svg .hk-av.hk-lamp { fill: #f4c974; }
+
+.harbour-svg .hk-g,
+.harbour-svg .hk-frame,
+.harbour-svg .hk-crown,
+.harbour-svg .hk-wl,
+.harbour-svg .hk-glass,
+.harbour-svg .hk-sail {
+  transition: stroke 1.2s ease, stroke-opacity 1.2s ease, fill 1.2s ease;
 }
+
+/* ---- night ---- */
+html[data-theme="dark"] .harbour-svg .hk-b,
+html[data-theme="dark"] .harbour-svg .hk-s  { stroke-opacity: 0.5; }
+html[data-theme="dark"] .harbour-svg .hk-bb { stroke-opacity: 0.2; }
+html[data-theme="dark"] .harbour-svg .hk-bf { stroke-opacity: 0.32; }
+html[data-theme="dark"] .harbour-svg .hk-d  { stroke-opacity: 0.16; }
+html[data-theme="dark"] .harbour-svg .hk-m  { stroke-opacity: 0.22; }
+
+html[data-theme="dark"] .harbour-svg .hk-l1 { opacity: 0.95; transition-delay: 0.15s; }
+html[data-theme="dark"] .harbour-svg .hk-l2 { opacity: 0.68; transition-delay: 0.55s; }
+html[data-theme="dark"] .harbour-svg .hk-l3 { opacity: 0.44; transition-delay: 0.95s; }
+html[data-theme="dark"] .harbour-svg .hk-l4 { opacity: 0.26; transition-delay: 1.35s; }
+html[data-theme="dark"] .harbour-svg .hk-tw { opacity: 0.9; animation: hk-twinkle 7s ease-in-out infinite; }
+html[data-theme="dark"] .harbour-svg .hk-av { opacity: 1; animation: hk-beacon 2.6s ease-in-out infinite; }
+html[data-theme="dark"] .harbour-svg .hk-av.hk-lamp { animation: none; opacity: 0.9; }
+
+html[data-theme="dark"] .harbour-svg .hk-g,
+html[data-theme="dark"] .harbour-svg .hk-crown,
+html[data-theme="dark"] .harbour-svg .hk-wl {
+  stroke: #f2c46d; stroke-opacity: 0.85;
+  filter: drop-shadow(0 0 1.6px rgba(244, 201, 116, 0.55));
+}
+html[data-theme="dark"] .harbour-svg .hk-frame {
+  stroke: #fff4dc; stroke-opacity: 0.9; stroke-width: 0.8;
+  filter: drop-shadow(0 0 2px rgba(255, 236, 200, 0.55));
+}
+html[data-theme="dark"] .harbour-svg .hk-neon { animation: hk-neon 18s linear infinite; }
+html[data-theme="dark"] .harbour-svg .hk-glass { fill: rgba(244, 201, 116, 0.09); }
+html[data-theme="dark"] .harbour-svg .hk-sail { fill: rgba(226, 105, 93, 0.35); stroke: #e2695d; stroke-opacity: 0.85; }
 
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) .hp { opacity: 0.22; }
-  html:not([data-theme="light"]) .hb { opacity: 0.55; fill: var(--bg); }
-  html:not([data-theme="light"]) .hv { opacity: 0.4; stroke: #e7c78f; }
-  html:not([data-theme="light"]) .hl-facets { filter: drop-shadow(0 0 2px rgba(231, 199, 143, 0.28)); }
+  html:not([data-theme="light"]) .harbour-svg .hk-b,
+  html:not([data-theme="light"]) .harbour-svg .hk-s  { stroke-opacity: 0.5; }
+  html:not([data-theme="light"]) .harbour-svg .hk-bb { stroke-opacity: 0.2; }
+  html:not([data-theme="light"]) .harbour-svg .hk-bf { stroke-opacity: 0.32; }
+  html:not([data-theme="light"]) .harbour-svg .hk-d  { stroke-opacity: 0.16; }
+  html:not([data-theme="light"]) .harbour-svg .hk-m  { stroke-opacity: 0.22; }
+
+  html:not([data-theme="light"]) .harbour-svg .hk-l1 { opacity: 0.95; transition-delay: 0.15s; }
+  html:not([data-theme="light"]) .harbour-svg .hk-l2 { opacity: 0.68; transition-delay: 0.55s; }
+  html:not([data-theme="light"]) .harbour-svg .hk-l3 { opacity: 0.44; transition-delay: 0.95s; }
+  html:not([data-theme="light"]) .harbour-svg .hk-l4 { opacity: 0.26; transition-delay: 1.35s; }
+  html:not([data-theme="light"]) .harbour-svg .hk-tw { opacity: 0.9; animation: hk-twinkle 7s ease-in-out infinite; }
+  html:not([data-theme="light"]) .harbour-svg .hk-av { opacity: 1; animation: hk-beacon 2.6s ease-in-out infinite; }
+  html:not([data-theme="light"]) .harbour-svg .hk-av.hk-lamp { animation: none; opacity: 0.9; }
+
+  html:not([data-theme="light"]) .harbour-svg .hk-g,
+  html:not([data-theme="light"]) .harbour-svg .hk-crown,
+  html:not([data-theme="light"]) .harbour-svg .hk-wl {
+    stroke: #f2c46d; stroke-opacity: 0.85;
+    filter: drop-shadow(0 0 1.6px rgba(244, 201, 116, 0.55));
+  }
+  html:not([data-theme="light"]) .harbour-svg .hk-frame {
+    stroke: #fff4dc; stroke-opacity: 0.9; stroke-width: 0.8;
+    filter: drop-shadow(0 0 2px rgba(255, 236, 200, 0.55));
+  }
+  html:not([data-theme="light"]) .harbour-svg .hk-neon { animation: hk-neon 18s linear infinite; }
+  html:not([data-theme="light"]) .harbour-svg .hk-glass { fill: rgba(244, 201, 116, 0.09); }
+  html:not([data-theme="light"]) .harbour-svg .hk-sail { fill: rgba(226, 105, 93, 0.35); stroke: #e2695d; stroke-opacity: 0.85; }
+}
+
+@keyframes hk-twinkle {
+  0%, 100% { opacity: 0.9; }
+  46%      { opacity: 0.9; }
+  50%      { opacity: 0.08; }
+  58%      { opacity: 0.08; }
+  62%      { opacity: 0.9; }
+}
+@keyframes hk-beacon {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+/* the neon bands of Central Plaza and The Center drift slowly through warm hues */
+@keyframes hk-neon {
+  0%, 100% { stroke: #f2c46d; }
+  33%      { stroke: #f08a6c; }
+  66%      { stroke: #e9a7c6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .harbour-svg .hk-tw,
+  .harbour-svg .hk-av,
+  .harbour-svg .hk-neon { animation: none !important; }
+  .harbour-svg .hk-l,
+  .harbour-svg .hk-av { transition: none; }
 }
 
 .harbour-label {
   position: absolute;
-  right: clamp(20px, 4vw, 54px);
-  bottom: clamp(10px, 1.8vw, 24px);
+  left: 50%;
+  top: clamp(2px, 0.8vw, 12px);
+  transform: translateX(-50%);
   font-family: "Didot", "Bodoni 72", Georgia, serif;
   font-style: italic;
-  font-size: clamp(15px, 1.7vw, 22px);
-  letter-spacing: 0.015em;
+  font-size: clamp(16px, 1.9vw, 24px);
+  letter-spacing: 0.05em;
   color: var(--faint);
-  opacity: 0.8;
+  opacity: 0.62;
   white-space: nowrap;
 }
 
 @media (max-width: 680px) {
   .harbour { margin-top: 48px; height: 190px; }
-  .harbour-label { font-size: 13px; }
+  .harbour-label { font-size: 14px; top: 4px; }
 }
 
 /* ---------- i am ---------- */
