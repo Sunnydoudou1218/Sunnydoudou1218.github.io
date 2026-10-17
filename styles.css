@@ -763,8 +763,8 @@ h1 .zh {
 
 .harbour {
   position: relative;
-  margin-top: 76px;
-  height: clamp(210px, 25vw, 330px);
+  margin-top: 72px;
+  height: clamp(230px, 26vw, 340px);
   overflow: hidden;
   color: var(--fg);
   pointer-events: none;
@@ -778,22 +778,36 @@ h1 .zh {
   display: block;
   fill: none;
   stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.hp { stroke-width: 0.9; opacity: 0.17; }
+.hp2 { stroke-width: 0.7; opacity: 0.16; }
+.hb {
+  stroke-width: 1.05;
+  opacity: 0.62;
+  fill: var(--bg);
+}
+.hv { stroke-width: 0.55; opacity: 0.26; }
+.hw { stroke-width: 0.8; opacity: 0.24; }
+.hb0 { stroke-width: 1; opacity: 0.42; }
+
+html[data-theme="dark"] .hp { opacity: 0.22; }
+html[data-theme="dark"] .hb { opacity: 0.55; fill: var(--bg); }
+html[data-theme="dark"] .hv {
   opacity: 0.4;
+  stroke: #e7c78f;
 }
-
-.hb { stroke-width: 1.1; }
-.hv { stroke-width: 0.7; opacity: 0.4; }
-.hw { stroke-width: 0.8; opacity: 0.45; }
-
-.hl-lights {
-  opacity: 0;
-  transition: opacity 1200ms ease;
+html[data-theme="dark"] .hl-facets {
+  filter: drop-shadow(0 0 2px rgba(231, 199, 143, 0.28));
 }
-
-html[data-theme="dark"] .hl-lights { opacity: 0.9; }
 
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) .hl-lights { opacity: 0.9; }
+  html:not([data-theme="light"]) .hp { opacity: 0.22; }
+  html:not([data-theme="light"]) .hb { opacity: 0.55; fill: var(--bg); }
+  html:not([data-theme="light"]) .hv { opacity: 0.4; stroke: #e7c78f; }
+  html:not([data-theme="light"]) .hl-facets { filter: drop-shadow(0 0 2px rgba(231, 199, 143, 0.28)); }
 }
 
 .harbour-label {
@@ -810,6 +824,6 @@ html[data-theme="dark"] .hl-lights { opacity: 0.9; }
 }
 
 @media (max-width: 680px) {
-  .harbour { margin-top: 52px; height: 180px; }
+  .harbour { margin-top: 48px; height: 190px; }
   .harbour-label { font-size: 13px; }
 }
