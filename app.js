@@ -14,18 +14,46 @@
 
   var themeBtn = document.getElementById('theme-toggle');
 
+  var tzName = 'UTC';
+  try { tzName = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) {}
+  var tzCity = tzName.split('/').pop().replace(/_/g, ' ');
+
+  function storedTheme() {
+    try { return localStorage.getItem('theme'); } catch (e) { return null; }
+  }
+
+  function localHour(tz) {
+    try {
+      return parseInt(new Intl.DateTimeFormat('en-GB', {
+        timeZone: tz, hour: '2-digit', hour12: false
+      }).format(new Date()), 10);
+    } catch (e) {
+      return new Date().getHours();
+    }
+  }
+
+  function isNightHere() {
+    var h = localHour(tzName);
+    return h < 6 || h >= 19;
+  }
+
+  function setThemeAttr(next) {
+    root.setAttribute('data-theme', next);
+    syncSky();
+    if (typeof updateClock === 'function') updateClock();
+  }
+
   function currentTheme() {
     var set = root.getAttribute('data-theme');
     if (set === 'light' || set === 'dark') return set;
-    return darkQuery.matches ? 'dark' : 'light';
+    return isNightHere() ? 'dark' : 'light';
   }
 
   function isDark() { return currentTheme() === 'dark'; }
 
   function applyTheme(next) {
-    root.setAttribute('data-theme', next);
+    setThemeAttr(next);
     try { localStorage.setItem('theme', next); } catch (e) {}
-    syncSky();
   }
 
   if (themeBtn) {
@@ -57,14 +85,25 @@
   /* ---------------------------------------------------------------- clock */
 
   var clockEl = document.getElementById('clock');
-  if (clockEl) {
-    var timeFmt = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Hong_Kong', hour: '2-digit', minute: '2-digit', hour12: false
-    });
-    var tickClock = function () { clockEl.textContent = timeFmt.format(new Date()); };
-    tickClock();
-    setInterval(tickClock, 10000);
+  var placeEl = document.getElementById('place');
+
+  function updateClock() {
+    var manual = !!storedTheme();
+    var tz = manual ? 'Asia/Hong_Kong' : tzName;
+    var city = manual ? 'Hong Kong' : tzCity;
+    if (placeEl) placeEl.textContent = city;
+    if (!clockEl) return;
+    try {
+      clockEl.textContent = new Intl.DateTimeFormat('en-GB', {
+        timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false
+      }).format(new Date());
+    } catch (e) {
+      clockEl.textContent = '--:--';
+    }
   }
+
+  updateClock();
+  setInterval(updateClock, 15000);
 
   /* ------------------------------------------------------------- visitors */
 
@@ -137,7 +176,12 @@
       - 0.278 * Math.sin((F - Mp) * RAD)
       - 0.173 * Math.sin((2 * D - F) * RAD);
 
-    return { lambda: ((lambda % 360) + 360) % 360, beta: beta };
+    return {
+      lambda: ((lambda % 360) + 360) % 360,
+      beta: beta,
+      D: ((D % 360) + 360) % 360,
+      Mp: ((Mp % 360) + 360) % 360
+    };
   }
 
   function sunEcliptic(jd) {
@@ -210,7 +254,8 @@
     limb: 0,
     alt: 0, az: 0, below: false,
     dragging: false,
-    dragMoved: false
+    dragMoved: false,
+    scale: 1
   };
 
   var CRATERS = [
@@ -254,6 +299,14 @@
     var sH = horizontal(sEq.ra, sEq.dec, jd);
 
     moon.elong = ((m.lambda - s.lambda) % 360 + 360) % 360;
+
+    // distance in km, from the main periodic terms -> apparent size varies ~ +-5%
+    var dist = 385000.56
+      - 20905.355 * Math.cos(m.Mp * RAD)
+      - 3699.111 * Math.cos((2 * m.D - m.Mp) * RAD)
+      - 2955.968 * Math.cos(2 * m.D * RAD)
+      - 569.925 * Math.cos(2 * m.Mp * RAD);
+    moon.scale = Math.max(0.94, Math.min(1.06, 384400 / dist));
     moon.alt = mH.alt;
     moon.az = mH.az;
     moon.below = mH.alt < 0;
@@ -285,7 +338,7 @@
     var hovering = document.body.classList.contains('over-moon');
     var cx = moon.x;
     var cy = moon.y;
-    var r = moon.r;
+    var r = moon.r * (moon.scale || 1);
 
     if (dark && !moon.below) {
       var pulse = 1 + Math.sin(now * 0.00016) * 0.05;
@@ -302,6 +355,14 @@
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(moon.limb);
+
+    // earthshine: the dark limb is faintly lit by sunlight bounced off Earth
+    if (dark) {
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(246, 242, 231, 0.028)';
+      ctx.fill();
+    }
 
     moonPath(ctx, r, moon.elong);
 
@@ -375,7 +436,7 @@
   var streakWait = 5200;
 
   function buildStars() {
-    var count = Math.max(70, Math.min(230, Math.round((W * H) / 9000)));
+    var count = Math.max(45, Math.min(130, Math.round((W * H) / 17000)));
     stars = [];
     for (var i = 0; i < count; i++) {
       stars.push({
@@ -424,6 +485,44 @@
     ctx.fill();
   }
 
+
+  /* Big Dipper: fixed asterism, drawn faintly so it reads as a constellation
+     rather than decoration. Its real sky position rotates once a sidereal day;
+     here it is anchored so it never collides with the layout. */
+  var DIPPER = [
+    [0.06, 0.54], [0.13, 0.76], [0.36, 0.78], [0.32, 0.53],
+    [0.51, 0.47], [0.70, 0.39], [0.89, 0.27]
+  ];
+  var DIPPER_LINKS = [[0, 1], [1, 2], [2, 3], [3, 0], [3, 4], [4, 5], [5, 6]];
+
+  function drawDipper(ctx, now) {
+    var w = Math.min(230, W * 0.24);
+    if (w < 90) return;
+    var h = w * 0.62;
+    var x0 = W * 0.055;
+    var y0 = 78;
+
+    ctx.strokeStyle = 'rgba(226, 234, 248, 0.075)';
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    for (var i = 0; i < DIPPER_LINKS.length; i++) {
+      var l = DIPPER_LINKS[i];
+      var p = DIPPER[l[0]], q = DIPPER[l[1]];
+      ctx.moveTo(x0 + p[0] * w, y0 + p[1] * h);
+      ctx.lineTo(x0 + q[0] * w, y0 + q[1] * h);
+    }
+    ctx.stroke();
+
+    for (var j = 0; j < DIPPER.length; j++) {
+      var st = DIPPER[j];
+      var tw = 0.55 + 0.45 * Math.sin(now * 0.0009 + j * 1.7);
+      ctx.fillStyle = 'rgba(240, 244, 255, ' + (0.52 * tw).toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(x0 + st[0] * w, y0 + st[1] * h, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
   /* ------------------------------------------------------------------- sky */
 
   var skyRunning = false;
@@ -437,7 +536,10 @@
     var dark = isDark();
     skyCtx.clearRect(0, 0, W, H);
 
-    if (dark) drawStars(skyCtx, now, dt);
+    if (dark) {
+      drawStars(skyCtx, now, dt);
+      drawDipper(skyCtx, now);
+    }
 
     // moon eases toward the real sky position unless the user is dragging it
     if (!moon.dragging) {
@@ -908,7 +1010,63 @@
     portrait.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   }
 
+
+  /* ---------------------------------------------------------------- typing */
+
+  function startTyping() {
+    if (calmQuery.matches) return;
+    var els = Array.prototype.slice.call(document.querySelectorAll('[data-type]'));
+    if (!els.length) return;
+
+    var texts = els.map(function (el) { return el.textContent; });
+
+    els.forEach(function (el) {
+      var h = el.getBoundingClientRect().height;
+      if (h > 0) el.style.minHeight = h + 'px';
+      el.textContent = '';
+    });
+
+    var index = 0;
+
+    function nextBlock() {
+      if (index >= els.length) return;
+      var el = els[index];
+      var text = texts[index];
+      el.classList.add('typing');
+
+      var caret = document.createElement('span');
+      caret.className = 'caret';
+      el.appendChild(caret);
+
+      var pos = 0;
+
+      function step() {
+        if (pos >= text.length) {
+          caret.remove();
+          el.classList.remove('typing');
+          el.classList.add('typed');
+          index++;
+          setTimeout(nextBlock, 240);
+          return;
+        }
+        var ch = text.charAt(pos++);
+        caret.insertAdjacentText('beforebegin', ch);
+        var delay = 9;
+        if (ch === '.' || ch === '!' || ch === '?') delay = 250;
+        else if (ch === ',' || ch === ';' || ch === ':') delay = 120;
+        else if (ch === ' ') delay = 13;
+        setTimeout(step, delay + Math.random() * 7);
+      }
+
+      step();
+    }
+
+    nextBlock();
+  }
+
   /* ------------------------------------------------------------------ boot */
+
+  if (!storedTheme()) setThemeAttr(isNightHere() ? 'dark' : 'light');
 
   setInterval(function () { updateEphemeris(new Date()); }, 20000);
   sizeCanvases();
@@ -916,6 +1074,7 @@
   moon.x = moon.tx;
   moon.y = moon.ty;
   syncSky();
+  startTyping();
 
   var levelTimer = setInterval(function () { updateLevels(Date.now()); }, 60);
 
