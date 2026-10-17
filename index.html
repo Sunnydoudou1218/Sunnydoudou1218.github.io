@@ -60,53 +60,53 @@
   <div class="rule" aria-hidden="true"></div>
 
   <section id="about">
-    <p class="lede reveal">I care about models that can explain a decision to the person acting on it. So far that has meant credit risk, customer churn, and telling human from machine-written text.</p>
-    <p class="body reveal">Most of what I build is scaffolding. If a step has to be done twice by hand, it becomes a small tool and stops being a step. That habit has grown into a server that writes itself a brief every morning.</p>
+    <p class="lede">I care about models that can explain a decision to the person acting on it. So far that has meant credit risk, customer churn, and telling human from machine-written text.</p>
+    <p class="body">Most of what I build is scaffolding. If a step has to be done twice by hand, it becomes a small tool and stops being a step. That habit has grown into a server that writes itself a brief every morning.</p>
   </section>
 
   <section id="research">
-    <h2 class="reveal">Research</h2>
+    <h2>Research</h2>
 
-    <article class="item reveal">
+    <article class="item">
       <h3>Spillovers from public-welfare videos on Bilibili</h3>
       <p class="meta">Undergraduate thesis · 2026</p>
       <p>A full year of creator data, 276 propensity-matched pairs, two-way fixed effects, robust to a Callaway–Sant'Anna staggered difference-in-differences. Engagement on a creator's later non-welfare videos rose; sentiment moved the same way but rarely reached significance. The gain sat with the creators who had been less active.</p>
     </article>
 
-    <article class="item reveal">
+    <article class="item">
       <h3>Churn prediction, interpretable end to end</h3>
       <p>16,000 customer records cut to 27 variables. Test accuracy 78.1% from a logistic baseline, 82.1% with a hinge loss, then 95.4% with an EBM, every variable still readable.</p>
     </article>
 
-    <article class="item reveal">
+    <article class="item">
       <h3>AI companions and self-disclosure</h3>
       <p>I built the agent on Coze; our team's paper on how output modality shifts perceived social presence appeared at CNAIS 2025.</p>
     </article>
 
-    <article class="item reveal">
+    <article class="item">
       <h3>Detecting machine-written text on a compute budget</h3>
       <p>830,000 texts. A fine-tuned TF-IDF SVM reached 92% accuracy and 95% recall, ahead of a three-layer LSTM and a CNN under the same budget.</p>
     </article>
   </section>
 
   <section id="projects">
-    <h2 class="reveal">Projects</h2>
-    <p class="section-note reveal">Running on one cloud instance. Source is private; the site is not.</p>
+    <h2>Projects</h2>
+    <p class="section-note">Running on one cloud instance. Source is private; the site is not.</p>
 
     <div class="cards">
-      <a class="card reveal" href="https://home.luyue.work/daily.html">
+      <a class="card" href="https://home.luyue.work/daily.html">
         <span class="tag">Automation</span>
         <h3>Daily brief</h3>
         <p>A cron job pulls finance, weather and trending data, then a model writes the morning brief and pushes it to WeChat at nine.</p>
       </a>
 
-      <a class="card reveal" href="https://home.luyue.work/chat.html">
+      <a class="card" href="https://home.luyue.work/chat.html">
         <span class="tag">AI</span>
         <h3>On-site chat</h3>
         <p>A password-protected FastAPI service streaming model output, with attachments, a workspace sandbox and a tool-action panel.</p>
       </a>
 
-      <a class="card reveal" href="https://home.luyue.work/plan.html">
+      <a class="card" href="https://home.luyue.work/plan.html">
         <span class="tag">Full stack</span>
         <h3>Planner</h3>
         <p>Week and month views over one calendar file, shared with the daily brief. Reminders fire every five minutes off the same data.</p>
@@ -115,9 +115,9 @@
   </section>
 
   <section id="experience">
-    <h2 class="reveal">Experience</h2>
+    <h2>Experience</h2>
 
-    <article class="item reveal">
+    <article class="item">
       <h3>JD Digits — Financial Strategy &amp; Operations</h3>
       <p class="meta">Data analysis · Jun–Sep 2025</p>
       <p>Built 18 Hive base tables and 24 dashboards, then ran an end-to-end review of a fund recommendation agent. Set up a GPT-4.1 prompt pipeline to score long conversations, and worked with KYC data for over a million wealth-management users.</p>
@@ -125,22 +125,22 @@
   </section>
 
   <section id="education">
-    <h2 class="reveal">Education</h2>
+    <h2>Education</h2>
 
-    <article class="item compact reveal">
+    <article class="item compact">
       <h3>MSc in Artificial Intelligence</h3>
       <p class="meta">CUHK · 2026 –</p>
     </article>
 
-    <article class="item compact reveal">
+    <article class="item compact">
       <h3>BSc in Big Data Management and Application</h3>
       <p class="meta">Xi'an Jiaotong University · 2022 – 2026</p>
     </article>
   </section>
 
   <section id="contact" class="contact">
-    <h2 class="reveal">Contact</h2>
-    <p class="reveal">The fastest way to reach me is <a href="https://github.com/Sunnydoudou1218">GitHub</a>. I also keep a small server at <a href="https://home.luyue.work">home.luyue.work</a>.</p>
+    <h2>Contact</h2>
+    <p>The fastest way to reach me is <a href="https://github.com/Sunnydoudou1218">GitHub</a>. I also keep a small server at <a href="https://home.luyue.work">home.luyue.work</a>.</p>
   </section>
 
 </main>
@@ -153,38 +153,34 @@
   (function () {
     var root = document.documentElement;
     var btn = document.getElementById('theme-toggle');
+    var bar = document.querySelector('.topbar');
+
     function current() {
       var set = root.getAttribute('data-theme');
       if (set === 'light' || set === 'dark') return set;
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-    var bar = document.querySelector('.topbar');
+
+    function applyTheme(next) {
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    }
+
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      if (document.startViewTransition) {
+        document.startViewTransition(function () { applyTheme(next); });
+      } else {
+        applyTheme(next);
+      }
+    });
+
     function onScroll() {
       if (window.scrollY > 8) bar.classList.add('scrolled');
       else bar.classList.remove('scrolled');
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-
-    btn.addEventListener('click', function () {
-      var next = current() === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-    });
-
-    if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
-      return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
-          io.unobserve(e.target);
-        }
-      });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   })();
 </script>
 
