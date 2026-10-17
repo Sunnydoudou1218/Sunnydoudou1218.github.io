@@ -126,7 +126,7 @@
     var opts = { cache: 'no-store' };
     if (controller) opts.signal = controller.signal;
 
-    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site3', opts)
+    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site4', opts)
       .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
       .then(function (data) {
         if (settled) return;
@@ -1150,6 +1150,10 @@
 
     cycle();
   }
+
+  [].forEach.call(document.querySelectorAll('.portrait'), function (img) {
+    img.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  });
 
   /* ------------------------------------------------------------------ boot */
 
