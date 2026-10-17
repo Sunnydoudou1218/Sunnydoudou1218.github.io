@@ -518,7 +518,7 @@ footer {
   overflow: hidden;
   border-radius: 7px;
   padding: 12px 0 14px;
-  min-height: 132px;
+  min-height: 150px;
   display: flex;
   align-items: center;
 }
@@ -572,9 +572,9 @@ footer {
 
 .edu:hover .edu-mark,
 .edu:focus-within .edu-mark {
-  right: 0;
+  right: 8px;
   opacity: 1;
-  transform: translateY(-50%) scale(1.015);
+  transform: translateY(-50%);
 }
 
 .edu:hover .edu-mark::after,
@@ -601,4 +601,52 @@ html[data-theme="dark"] .edu-mark .m-dark { display: block; }
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) .edu-mark .m-light { display: none; }
   html:not([data-theme="light"]) .edu-mark .m-dark { display: block; }
+}
+
+/* ---------- typing ---------- */
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.02em;
+  margin-left: 2px;
+  vertical-align: -0.16em;
+  background: var(--accent);
+  animation: caret-blink 1.05s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+[data-type].typing {
+  color: var(--muted);
+  transition: color 720ms ease;
+}
+
+[data-type].typed {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { display: none; }
+  [data-type].typing { color: inherit; transition: none; }
+}
+
+/* ---------- name, chinese half ---------- */
+
+h1 .zh {
+  display: inline-block;
+  margin-left: 13px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  color: var(--faint);
+  vertical-align: 0.16em;
+}
+
+@media (max-width: 680px) {
+  h1 .zh { font-size: 11px; margin-left: 10px; letter-spacing: 0.2em; }
 }
