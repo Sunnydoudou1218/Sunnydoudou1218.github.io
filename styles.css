@@ -650,3 +650,24 @@ h1 .zh {
 @media (max-width: 680px) {
   h1 .zh { font-size: 11px; margin-left: 10px; letter-spacing: 0.2em; }
 }
+
+/* ---------- cycling motto ---------- */
+
+.motto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.4em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.motto #motto-text {
+  white-space: pre-line;
+  display: inline-block;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+  .motto { min-height: 5.2em; }
+}
