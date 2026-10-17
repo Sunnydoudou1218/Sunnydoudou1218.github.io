@@ -3,7 +3,7 @@
   --bg-soft: #ffffff;
   --fg: #191814;
   --muted: #6b6862;
-  --faint: #79756c;
+  --faint: #6f6b63;
   --rule: #e5e1d8;
   --accent: #b23a2f;
   --shadow: 0 1px 2px rgba(25, 24, 20, 0.04), 0 8px 24px rgba(25, 24, 20, 0.05);
@@ -18,7 +18,7 @@ html[data-theme="dark"] {
   --bg-soft: #16161a;
   --fg: #eae7e0;
   --muted: #9b978e;
-  --faint: #8d897f;
+  --faint: #8f8b82;
   --rule: #24242a;
   --accent: #e2695d;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -30,7 +30,7 @@ html[data-theme="dark"] {
     --bg-soft: #16161a;
     --fg: #eae7e0;
     --muted: #9b978e;
-    --faint: #8d897f;
+    --faint: #8f8b82;
     --rule: #24242a;
     --accent: #e2695d;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -51,7 +51,7 @@ body {
   color: var(--fg);
   font-family: var(--sans);
   font-size: 16.5px;
-  line-height: 1.72;
+  line-height: 1.62;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 220ms ease, color 220ms ease;
@@ -150,7 +150,7 @@ body {
 
 .portrait {
   display: block;
-  width: 160px;
+  width: 152px;
   height: auto;
   margin: 0 auto 30px;
   border-radius: 5px;
@@ -169,7 +169,7 @@ body {
 
 h1 {
   font-family: var(--serif);
-  font-size: clamp(46px, 9vw, 74px);
+  font-size: clamp(42px, 6.2vw, 56px);
   line-height: 0.98;
   font-weight: 400;
   letter-spacing: -0.038em;
@@ -383,26 +383,16 @@ footer p {
 
 /* ---------- motion ---------- */
 
-.reveal {
-  opacity: 1;
-  transform: none;
-}
-
-.js .reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.js .reveal.in {
-  opacity: 1;
-  transform: none;
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 260ms;
+    animation-timing-function: ease;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .reveal { opacity: 1; transform: none; transition: none; }
   .card, .theme { transition: none; }
 }
 
