@@ -1013,10 +1013,10 @@
 
   /* ---------------------------------------------------------------- typing */
 
-  function startTyping() {
-    if (calmQuery.matches) return;
+  function startTyping(done) {
+    if (calmQuery.matches) { if (done) done(); return; }
     var els = Array.prototype.slice.call(document.querySelectorAll('[data-type]'));
-    if (!els.length) return;
+    if (!els.length) { if (done) done(); return; }
 
     var texts = els.map(function (el) { return el.textContent; });
 
@@ -1029,7 +1029,7 @@
     var index = 0;
 
     function nextBlock() {
-      if (index >= els.length) return;
+      if (index >= els.length) { if (done) done(); return; }
       var el = els[index];
       var text = texts[index];
       el.classList.add('typing');
@@ -1064,6 +1064,67 @@
     nextBlock();
   }
 
+
+  /* ---------------------------------------------------------- cycling motto */
+
+  function startMotto() {
+    var wrap = document.getElementById('motto-text');
+    if (!wrap) return;
+
+    var EN = 'Broaden learning, keep within propriety\nHold fast to who I am\nServe with loyalty and forbearance';
+    var CN = '博文约礼、坚守本我、忠恕任事';
+
+    if (calmQuery.matches) { wrap.textContent = CN; return; }
+
+    var out = document.createTextNode('');
+    var caret = document.createElement('span');
+    caret.className = 'caret';
+    wrap.appendChild(out);
+    wrap.appendChild(caret);
+
+    function typeText(text, speed, done) {
+      var i = 0;
+      (function step() {
+        if (i >= text.length) { done(); return; }
+        var ch = text.charAt(i++);
+        out.nodeValue += ch;
+        var d = speed;
+        if (ch === '\n') d = 260;
+        else if (ch === ',' || ch === ';') d = speed * 5;
+        setTimeout(step, d);
+      })();
+    }
+
+    function erase(speed, done) {
+      (function step() {
+        if (!out.nodeValue) { done(); return; }
+        out.nodeValue = out.nodeValue.slice(0, -1);
+        setTimeout(step, speed);
+      })();
+    }
+
+    function cycle() {
+      typeText(EN, 24, function () {
+        setTimeout(function () {
+          erase(8, function () {
+            setTimeout(function () {
+              typeText(CN, 42, function () {
+                // three quiet minutes on the Chinese, then the loop turns over
+                setTimeout(function () {
+                  erase(22, function () {
+                    setTimeout(cycle, 900);
+                  });
+                }, 180000);
+              });
+            }, 520);
+          });
+        }, 12000);
+      });
+    }
+
+    cycle();
+  }
+
   /* ------------------------------------------------------------------ boot */
 
   if (!storedTheme()) setThemeAttr(isNightHere() ? 'dark' : 'light');
@@ -1074,7 +1135,7 @@
   moon.x = moon.tx;
   moon.y = moon.ty;
   syncSky();
-  startTyping();
+  startTyping(startMotto);
 
   var levelTimer = setInterval(function () { updateLevels(Date.now()); }, 60);
 
