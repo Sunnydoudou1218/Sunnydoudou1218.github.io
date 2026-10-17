@@ -529,7 +529,7 @@ footer {
   position: relative;
   z-index: 1;
   padding-right: 70px;
-  transition: padding-right 430ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: padding-right 560ms cubic-bezier(0.16, 0.84, 0.28, 1);
 }
 
 .edu-mark {
@@ -541,9 +541,9 @@ footer {
   transform: translateY(-50%);
   opacity: 0.88;
   pointer-events: none;
-  transition: right 430ms cubic-bezier(0.2, 0.7, 0.2, 1),
-              opacity 320ms ease,
-              transform 430ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: right 620ms cubic-bezier(0.16, 0.84, 0.28, 1) 60ms,
+              opacity 420ms ease 120ms,
+              transform 620ms cubic-bezier(0.16, 0.84, 0.28, 1) 60ms;
 }
 
 .edu-mark img {
@@ -564,7 +564,7 @@ footer {
     color-mix(in srgb, var(--bg) 55%, transparent) 17%,
     transparent 39%
   );
-  transition: opacity 360ms ease;
+  transition: opacity 520ms ease 180ms;
 }
 
 .edu:hover .edu-body,
@@ -682,36 +682,41 @@ h1 .zh {
   align-items: center;
   justify-content: center;
   background: var(--bg);
-  animation: intro-out 700ms ease 2400ms forwards;
+  animation: intro-out 760ms ease 2500ms forwards;
 }
 
 .intro-line {
   display: flex;
-  align-items: baseline;
-  gap: 0.22em;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3em;
 }
 
 .intro-word,
 .intro-zh {
-  font-family: var(--serif);
-  line-height: 1;
-  color: var(--fg);
   opacity: 0;
-  filter: blur(9px);
-  transform: translateY(12px);
-  animation: intro-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  filter: blur(10px);
+  transform: translateY(14px);
+  animation: intro-in 1000ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 
 .intro-word {
-  font-size: clamp(58px, 10vw, 120px);
+  font-family: "Didot", "Bodoni 72", "Baskerville", Georgia, serif;
   font-style: italic;
-  animation-delay: 150ms;
+  font-size: clamp(70px, 12vw, 148px);
+  line-height: 0.94;
+  letter-spacing: -0.012em;
+  color: var(--fg);
+  animation-delay: 160ms;
 }
 
 .intro-zh {
-  font-size: clamp(44px, 7.6vw, 92px);
+  font-family: var(--cjk-serif, "Songti SC", "Noto Serif CJK SC", serif);
+  font-size: clamp(24px, 4vw, 40px);
+  letter-spacing: 0.46em;
+  text-indent: 0.46em;
   color: var(--muted);
-  animation-delay: 620ms;
+  animation-delay: 700ms;
 }
 
 @keyframes intro-in {
@@ -725,7 +730,7 @@ h1 .zh {
 .intro.skip { animation: intro-out 260ms ease forwards; }
 
 .page {
-  animation: page-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 2600ms;
+  animation: page-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 2700ms;
 }
 
 /* transform only: if this never runs, the page is still fully visible */
@@ -739,19 +744,83 @@ h1 .zh {
   .page { animation: none; }
 }
 
-/* ---------- i am ---------- */
+/* ---------- portrait: no long-press save ---------- */
 
-h1 .iam {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.38em;
-  font-weight: 400;
-  letter-spacing: 0.01em;
+.portrait-btn {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.portrait {
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ---------- victoria harbour, end of page ---------- */
+
+.harbour {
+  position: relative;
+  margin-top: 84px;
+  height: clamp(190px, 24vw, 300px);
+  overflow: hidden;
+  color: var(--fg);
+  pointer-events: none;
+}
+
+.harbour-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.34;
+  vector-effect: non-scaling-stroke;
+}
+
+.hl-sky { stroke-width: 1.15; opacity: 1; }
+.hl-detail { opacity: 0.38; }
+.hl-windows { opacity: 0.2; }
+.hl-water { opacity: 0.2; }
+
+.hl-lights {
+  opacity: 0;
+  fill: #ffcf8a;
+  stroke: none;
+  transition: opacity 900ms ease;
+}
+
+.hl-lights circle { r: 1.5px; }
+
+html[data-theme="dark"] .hl-lights { filter: drop-shadow(0 0 2px rgba(255, 207, 138, 0.55)); }
+
+html[data-theme="dark"] .hl-lights { opacity: 0.62; }
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .hl-lights { opacity: 0.62; }
+}
+
+.harbour-label {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.44em;
+  text-indent: 0.44em;
+  text-transform: uppercase;
   color: var(--faint);
-  margin-right: 0.16em;
-  vertical-align: 0.42em;
+  opacity: 0.7;
+  white-space: nowrap;
 }
 
 @media (max-width: 680px) {
-  h1 .iam { font-size: 0.4em; vertical-align: 0.3em; }
+  .harbour { margin-top: 56px; height: 170px; }
+  .harbour-label { font-size: 9px; letter-spacing: 0.32em; text-indent: 0.32em; }
 }
