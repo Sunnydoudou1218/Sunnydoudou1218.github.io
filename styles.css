@@ -671,3 +671,69 @@ h1 .zh {
 @media (max-width: 680px) {
   .motto { min-height: 5.2em; }
 }
+
+/* ---------- entrance ---------- */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  animation: intro-out 650ms ease 1900ms forwards;
+}
+
+.intro-word {
+  font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", "Brush Script MT", cursive;
+  font-size: clamp(92px, 18vw, 224px);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--fg);
+  clip-path: inset(0 100% 0 0);
+  animation: intro-write 1600ms cubic-bezier(0.42, 0.02, 0.3, 1) 100ms forwards;
+}
+
+@keyframes intro-write {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes intro-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+.intro.skip { animation: intro-out 260ms ease forwards; }
+
+.page {
+  animation: page-in 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 2100ms;
+}
+
+/* transform only: if this never runs, the page is still fully visible */
+@keyframes page-in {
+  from { transform: translateY(12px); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro { display: none; }
+  .page { animation: none; }
+}
+
+/* ---------- i am ---------- */
+
+h1 .iam {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.38em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--faint);
+  margin-right: 0.16em;
+  vertical-align: 0.42em;
+}
+
+@media (max-width: 680px) {
+  h1 .iam { font-size: 0.4em; vertical-align: 0.3em; }
+}
