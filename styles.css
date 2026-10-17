@@ -827,3 +827,20 @@ html[data-theme="dark"] .hl-facets {
   .harbour { margin-top: 48px; height: 190px; }
   .harbour-label { font-size: 13px; }
 }
+
+/* ---------- i am ---------- */
+
+h1 .iam {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.34em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--faint);
+  margin-right: 0.18em;
+  vertical-align: 0.44em;
+}
+
+@media (max-width: 680px) {
+  h1 .iam { font-size: 0.36em; vertical-align: 0.34em; }
+}
