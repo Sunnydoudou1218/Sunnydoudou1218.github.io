@@ -892,10 +892,10 @@
       audio.volume = 0;
       var p = audio.play();
       if (p && p.then) {
-        p.then(function () { setPlaying(true); fadeTo(0.34, 900); }).catch(function () {});
+        p.then(function () { setPlaying(true); fadeTo(0.34, 180); }).catch(function () {});
       } else {
         setPlaying(true);
-        fadeTo(0.34, 900);
+        fadeTo(0.34, 180);
       }
     } else {
       setPlaying(false);
@@ -920,6 +920,15 @@
   }
 
   if (audio) {
+    // warm the file in the background so the first tap starts instantly
+    var warm = function () {
+      if (!audio || !audio.paused || audio.currentTime > 0) return;
+      audio.preload = 'auto';
+      try { audio.load(); } catch (e) {}
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 4000 });
+    else setTimeout(warm, 2200);
+
     audio.addEventListener('pause', function () { setPlaying(false); });
     audio.addEventListener('play', function () { setPlaying(true); });
   }
@@ -937,11 +946,18 @@
   var downX = 0, downY = 0;
 
   document.addEventListener('pointermove', function (e) {
-    if (pointerDown && moon.dragging) {
-      dragged = true;
-      moon.x = e.clientX;
-      moon.y = e.clientY;
-      return;
+    if (pointerDown) {
+      var far = Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY);
+      if (!moon.dragging && far > 6) {
+        moon.dragging = true;
+        dragged = true;
+      }
+      if (moon.dragging) {
+        moon.x = e.clientX;
+        moon.y = e.clientY;
+        startSky();
+        return;
+      }
     }
     var hit = moonHit(e.clientX, e.clientY);
     if (hit !== document.body.classList.contains('over-moon')) {
@@ -956,9 +972,9 @@
     if (!moonHit(e.clientX, e.clientY)) return;
     pointerDown = true;
     dragged = false;
+    moon.dragging = false;
     downX = e.clientX;
     downY = e.clientY;
-    moon.dragging = true;
     startSky();
     e.preventDefault();
   });
