@@ -126,7 +126,7 @@
     var opts = { cache: 'no-store' };
     if (controller) opts.signal = controller.signal;
 
-    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site', opts)
+    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site2', opts)
       .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
       .then(function (data) {
         if (settled) return;
@@ -1029,8 +1029,8 @@
 
   /* ---------------------------------------------------------------- typing */
 
-  function startTyping(done) {
-    if (calmQuery.matches) { if (done) done(); return; }
+  function startTyping(done, onName) {
+    if (calmQuery.matches) { if (onName) onName(); if (done) done(); return; }
     var els = Array.prototype.slice.call(document.querySelectorAll('[data-type]'));
     if (!els.length) { if (done) done(); return; }
 
@@ -1061,7 +1061,9 @@
           caret.remove();
           el.classList.remove('typing');
           el.classList.add('typed');
+          var wasName = el.classList.contains('name-text');
           index++;
+          if (wasName && onName) onName();
           setTimeout(nextBlock, 240);
           return;
         }
@@ -1088,9 +1090,10 @@
     if (!wrap) return;
 
     var EN = 'To broaden learning and keep within propriety\nTo hold fast to who I am\nTo serve with loyalty and forbearance';
-    var CN = '博文约礼、坚守本我、忠恕任事';
+    var S = '博文约礼、坚守本我、忠恕任事';
+    var T = '博文約禮、堅守本我、忠恕任事';
 
-    if (calmQuery.matches) { wrap.textContent = CN; return; }
+    if (calmQuery.matches) { wrap.textContent = S; return; }
 
     var out = document.createTextNode('');
     var caret = document.createElement('span');
@@ -1120,21 +1123,28 @@
     }
 
     function cycle() {
-      typeText(EN, 24, function () {
+      typeText(S, 42, function () {
         setTimeout(function () {
-          erase(8, function () {
+          erase(22, function () {
             setTimeout(function () {
-              typeText(CN, 42, function () {
-                // three quiet minutes on the Chinese, then the loop turns over
+              typeText(T, 42, function () {
                 setTimeout(function () {
                   erase(22, function () {
-                    setTimeout(cycle, 900);
+                    setTimeout(function () {
+                      typeText(EN, 24, function () {
+                        setTimeout(function () {
+                          erase(8, function () {
+                            setTimeout(cycle, 900);
+                          });
+                        }, 180000);
+                      });
+                    }, 520);
                   });
-                }, 180000);
+                }, 10000);
               });
             }, 520);
           });
-        }, 6000);
+        }, 10000);
       });
     }
 
@@ -1155,8 +1165,7 @@
   function startContent() {
     if (contentStarted) return;
     contentStarted = true;
-    startTyping();
-    setTimeout(startMotto, 1200);
+    startTyping(null, startMotto);
   }
 
   var introEl = document.getElementById('intro');
@@ -1165,8 +1174,8 @@
     startContent();
   } else {
     // the CSS animation normally clears it at ~2.55s; these are the guarantees
-    setTimeout(function () { if (introEl.parentNode) introEl.remove(); }, 2750);
-    setTimeout(startContent, 2850);
+    setTimeout(function () { if (introEl.parentNode) introEl.remove(); }, 3150);
+    setTimeout(startContent, 3250);
     var skipIntro = function () {
       if (introEl.parentNode) introEl.classList.add('skip');
       var page = document.querySelector('.page');
