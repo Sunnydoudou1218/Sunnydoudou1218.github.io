@@ -1151,7 +1151,31 @@
   moon.x = moon.tx;
   moon.y = moon.ty;
   syncSky();
-  startTyping(startMotto);
+  var contentStarted = false;
+  function startContent() {
+    if (contentStarted) return;
+    contentStarted = true;
+    startTyping(startMotto);
+  }
+
+  var introEl = document.getElementById('intro');
+  if (!introEl || calmQuery.matches) {
+    if (introEl) introEl.hidden = true;
+    startContent();
+  } else {
+    // the CSS animation normally clears it at ~2.55s; these are the guarantees
+    setTimeout(function () { if (introEl.parentNode) introEl.remove(); }, 2750);
+    setTimeout(startContent, 2850);
+    var skipIntro = function () {
+      if (introEl.parentNode) introEl.classList.add('skip');
+      var page = document.querySelector('.page');
+      if (page) page.style.animation = 'none';
+      startContent();
+    };
+    window.addEventListener('pointerdown', skipIntro, { once: true });
+    window.addEventListener('keydown', skipIntro, { once: true });
+    window.addEventListener('wheel', skipIntro, { once: true, passive: true });
+  }
 
   var levelTimer = setInterval(function () { updateLevels(Date.now()); }, 60);
 
