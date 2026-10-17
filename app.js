@@ -1087,7 +1087,7 @@
     var wrap = document.getElementById('motto-text');
     if (!wrap) return;
 
-    var EN = 'Broaden learning, keep within propriety\nHold fast to who I am\nServe with loyalty and forbearance';
+    var EN = 'To broaden learning and keep within propriety\nTo hold fast to who I am\nTo serve with loyalty and forbearance';
     var CN = '博文约礼、坚守本我、忠恕任事';
 
     if (calmQuery.matches) { wrap.textContent = CN; return; }
@@ -1134,7 +1134,7 @@
               });
             }, 520);
           });
-        }, 12000);
+        }, 6000);
       });
     }
 
@@ -1155,7 +1155,8 @@
   function startContent() {
     if (contentStarted) return;
     contentStarted = true;
-    startTyping(startMotto);
+    startTyping();
+    setTimeout(startMotto, 1200);
   }
 
   var introEl = document.getElementById('intro');
