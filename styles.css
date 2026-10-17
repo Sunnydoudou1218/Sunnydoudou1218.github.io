@@ -759,12 +759,12 @@ h1 .zh {
   pointer-events: none;
 }
 
-/* ---------- victoria harbour, end of page ---------- */
+/* ---------- hong kong skyline, end of page ---------- */
 
 .harbour {
   position: relative;
-  margin-top: 84px;
-  height: clamp(190px, 24vw, 300px);
+  margin-top: 76px;
+  height: clamp(210px, 25vw, 330px);
   overflow: hidden;
   color: var(--fg);
   pointer-events: none;
@@ -778,49 +778,38 @@ h1 .zh {
   display: block;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1;
-  opacity: 0.34;
-  vector-effect: non-scaling-stroke;
+  opacity: 0.4;
 }
 
-.hl-sky { stroke-width: 1.15; opacity: 1; }
-.hl-detail { opacity: 0.38; }
-.hl-windows { opacity: 0.2; }
-.hl-water { opacity: 0.2; }
+.hb { stroke-width: 1.1; }
+.hv { stroke-width: 0.7; opacity: 0.4; }
+.hw { stroke-width: 0.8; opacity: 0.45; }
 
 .hl-lights {
   opacity: 0;
-  fill: #ffcf8a;
-  stroke: none;
-  transition: opacity 900ms ease;
+  transition: opacity 1200ms ease;
 }
 
-.hl-lights circle { r: 1.5px; }
-
-html[data-theme="dark"] .hl-lights { filter: drop-shadow(0 0 2px rgba(255, 207, 138, 0.55)); }
-
-html[data-theme="dark"] .hl-lights { opacity: 0.62; }
+html[data-theme="dark"] .hl-lights { opacity: 0.9; }
 
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) .hl-lights { opacity: 0.62; }
+  html:not([data-theme="light"]) .hl-lights { opacity: 0.9; }
 }
 
 .harbour-label {
   position: absolute;
-  left: 50%;
-  bottom: 6px;
-  transform: translateX(-50%);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.44em;
-  text-indent: 0.44em;
-  text-transform: uppercase;
+  right: clamp(20px, 4vw, 54px);
+  bottom: clamp(10px, 1.8vw, 24px);
+  font-family: "Didot", "Bodoni 72", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(15px, 1.7vw, 22px);
+  letter-spacing: 0.015em;
   color: var(--faint);
-  opacity: 0.7;
+  opacity: 0.8;
   white-space: nowrap;
 }
 
 @media (max-width: 680px) {
-  .harbour { margin-top: 56px; height: 170px; }
-  .harbour-label { font-size: 9px; letter-spacing: 0.32em; text-indent: 0.32em; }
+  .harbour { margin-top: 52px; height: 180px; }
+  .harbour-label { font-size: 13px; }
 }
