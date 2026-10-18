@@ -32,9 +32,19 @@
     }
   }
 
-  function isNightHere() {
+  function autoTheme() {
     var h = localHour(tzName);
-    return h < 6 || h >= 19;
+    return (h < 6 || h >= 19) ? 'dark' : 'light';
+  }
+
+  // a manual pick only holds while the ambient day/night state is unchanged,
+  // so visitors are not stuck in the wrong theme days later
+  function manualTheme() {
+    var saved = storedTheme();
+    if (saved !== 'light' && saved !== 'dark') return null;
+    var at = null;
+    try { at = localStorage.getItem('themeAuto'); } catch (e) {}
+    return at === autoTheme() ? saved : null;
   }
 
   function setThemeAttr(next) {
@@ -46,14 +56,17 @@
   function currentTheme() {
     var set = root.getAttribute('data-theme');
     if (set === 'light' || set === 'dark') return set;
-    return isNightHere() ? 'dark' : 'light';
+    return autoTheme();
   }
 
   function isDark() { return currentTheme() === 'dark'; }
 
   function applyTheme(next) {
     setThemeAttr(next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
+    try {
+      localStorage.setItem('theme', next);
+      localStorage.setItem('themeAuto', autoTheme());
+    } catch (e) {}
   }
 
   if (themeBtn) {
@@ -88,7 +101,7 @@
   var placeEl = document.getElementById('place');
 
   function updateClock() {
-    var manual = !!storedTheme();
+    var manual = !!manualTheme();
     var tz = manual ? 'Asia/Hong_Kong' : tzName;
     var city = manual ? 'Hong Kong' : tzCity;
     if (placeEl) placeEl.textContent = city;
@@ -104,6 +117,13 @@
 
   updateClock();
   setInterval(updateClock, 15000);
+
+  // a tab left open crosses the day/night line on its own
+  setInterval(function () {
+    if (manualTheme()) return;
+    var next = autoTheme();
+    if (root.getAttribute('data-theme') !== next) setThemeAttr(next);
+  }, 60000);
 
   /* ------------------------------------------------------------- visitors */
 
@@ -126,7 +146,7 @@
     var opts = { cache: 'no-store' };
     if (controller) opts.signal = controller.signal;
 
-    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site8', opts)
+    fetch('https://abacus.jasoncameron.dev/hit/luyue-work/site9', opts)
       .then(function (r) { if (!r.ok) throw new Error('bad'); return r.json(); })
       .then(function (data) {
         if (settled) return;
@@ -1157,7 +1177,7 @@
 
   /* ------------------------------------------------------------------ boot */
 
-  if (!storedTheme()) setThemeAttr(isNightHere() ? 'dark' : 'light');
+  if (!manualTheme()) setThemeAttr(autoTheme());
 
   setInterval(function () { updateEphemeris(new Date()); }, 20000);
   sizeCanvases();
